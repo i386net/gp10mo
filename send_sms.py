@@ -2,6 +2,9 @@
 Получить телефон клиента и отправить ему СМС
 
 """
+from smsc_api import *
+import time
+import sqlite3 as s3
 
 '''
 #smsc = SMSC()
@@ -13,9 +16,7 @@
 
 ['1', '1537938113', '0', '1537938112', '7926xxx', '2.20', 'SMSC.RU~sms', 'Доставлено', 'test,0']
 '''
-from smsc_api import *
-import time
-import sqlite3 as s3
+
 # db_path = './project_files/gp10mo.db'
 
 
@@ -77,16 +78,16 @@ def check_status():
     else:
         print('not found')
 
-'''
+
 def send_sms(num):
-    welcome_message = "Здравствуйте! Если хотите узнать стоимость доставки, пришлите цифру 1. " \
-                      "Если Вам нужно выставить счетдоговор, пришлите цифру 2"
+    welcome_message = "Это проверка работы API. Ответ пришлите на номер: 79037676877"
     sms = SMSC()
-    number = get_number_db()
+    # number = get_number_from_db() uncomment this
+    number = num  # comment this
     num_id = 'id' + number
     s = sms.send_sms(number, welcome_message, id=num_id, sender='sms')
     print(s)
-    time.sleep(10)
+    time.sleep(50)
     status = sms.get_status(num_id, number)
     print(status)
     full_status = sms.get_status(num_id, number, all=1)
@@ -101,8 +102,7 @@ def get_answer(id, sms_id,  number, mes):
     pass
 
 
-'''
+send_sms('79268401046')
 
 
-put_data_to_db('7905111201', 'John!')
 
