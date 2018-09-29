@@ -9,3 +9,7 @@
 
 ## Получение SMS API
 * https://smsc.ru/api/http/get_data/inbox/#menu
+
+## Phone to get sms
+79037676877
+бесплатный общий номер	-	-	активен	-	-	Билайн Москва (виртуальный номер, sms)
