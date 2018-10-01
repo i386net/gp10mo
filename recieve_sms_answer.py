@@ -15,7 +15,7 @@ def get_sms_answer():
     params = {'login': sa.login,
               'psw': sa.password,
               'fmt': '3',  # формат получения ответа в виде списка словарей"
-              'hour': '10'
+              'hour': '1'
               }
     r = requests.get(url, params)
 
@@ -23,9 +23,22 @@ def get_sms_answer():
 
 
 def update_db_with_answer(answer):
-    answer = answer[0]
-    con = s3.connect('./project_files/gp10mo.db')
-    cursor = con.cursor()
+    try:
+        answer = answer
+    except IndexError:
+        pass
+
+    if answer:
+        con = s3.connect('./project_files/gp10mo.db')
+        cursor = con.cursor()
+
+        insert_query = 'INSERT INTO answers(sms_id, received, phone_number, message, to_phone, sent) VALUES(?,?,?,?,?,?)'
+        for element in answer:
+            #print(element, type(element))
+            element = tuple(element.values())
+            cursor.execute(insert_query, element)
+        con.commit()
+        con.close()
 
 
 
