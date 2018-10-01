@@ -30,18 +30,21 @@ def put_data_to_db(number, name):
     db_path = './project_files/gp10mo.db'
     con = s3.connect(db_path)
 
-    input_query = 'INSERT INTO Client(phone_number, name) VALUES (?, ?)'  # добавление данных
-    verifying_query = 'SELECT EXISTS(SELECT phone_number FROM Client WHERE phone_number=? )'  # проверка присутствия
+    input_query = 'INSERT INTO clients(phone_number, name) VALUES (?, ?)'  # добавление данных
+    verifying_query = 'SELECT EXISTS(SELECT phone_number FROM clients WHERE phone_number=? )'  # проверка присутствия
     cur = con.cursor()
-    verify_db_presence = cur.execute(verifying_query, (number,))
+    verify_db_presence = cur.execute(verifying_query, (number,))  # наличие номера в БД
     verify_db_presence = verify_db_presence.fetchone()[0]
     # Если номера нет в базе добавляем его
     if not verify_db_presence:
         cur.execute(input_query, (number, name))
         con.commit()
         client_id = con.execute('SELECT LAST_INSERT_ROWID()')
-        client_id = client_id.fetchone()[0]  # получаем номер последней записи
-        cur.execute('INSERT INTO Status(status, client_id) VALUES (?, ?)', ('New', client_id))  # добавляем id клиента в Статус
+        # получаем номер последней записи
+        client_id = client_id.fetchone()[0]
+        # добавляем id клиента в Статус
+        cur.execute('INSERT INTO client_status(client_status, client_id) VALUES (?, ?)', ('New', client_id))
+        print('number {} was added'.format(number))
         con.commit()
     else:
         print('Number exist')
@@ -56,8 +59,9 @@ def get_number_from_db():
     # запрос к БД
     con = s3.connect('./project_files/gp10mo.db')
     cur = con.cursor()
-    numbers = cur.execute('select phone_number, name from Client as c left join Status as s on c.client_id = s.client_id where s.status = "New"')
+    numbers = cur.execute('select phone_number, name from clients as c left join client_status as s on c.id = s.client_id where s.client_status = "New"')
     numbers = numbers.fetchall()
+    print(numbers)
     con.close()
     return numbers
 
@@ -80,29 +84,64 @@ def check_status():
 
 
 def send_sms(num):
-    welcome_message = "Это проверка работы API. Ответ пришлите на номер: 79037676877"
+    """
+
+    :param num:
+    :return:
+    """
     sms = SMSC()
+    message = sms_message('welcome')
     # number = get_number_from_db() uncomment this
     number = num  # comment this
-    num_id = 'id' + number
-    s = sms.send_sms(number, welcome_message, id=num_id, sender='sms')
-    print(s)
-    time.sleep(50)
-    status = sms.get_status(num_id, number)
+    sms_id = 'id' + number
+    sms.send_sms(number, message, id=sms_id, sender='sms')
+    #print(s)
+    time.sleep(5)
+    status = sms.get_status(sms_id, number)
     print(status)
-    full_status = sms.get_status(num_id, number, all=1)
-    print(full_status)
+    #full_status = sms.get_status(sms_id, number, all=1)
+    #print(full_status)
 
 # передаваемые параметры: phone, mes, id, to для входящих sms и phone,
 # status, time, ts, id для статусов, метод POST
 #send_sms('79268401046')
 
 
+def sms_message(key):
+    """
+    Возаращает один из ответов в диалоге с клиентом
+    :param key: str dict key
+    :return: str dict value
+    """
+    messages = {
+        'welcome': '1 или 2 -> 79037676877',
+        'order_1': 'Город -> 79037676877',
+        'order_2': 'Ф1 Ю2 -> 79037676877',
+        'erunda_1': 'ерунда1',
+        'erunda_2': 'ерунда2',
+        'msk_order': 'Мск 1 или 2 -> 79037676877',
+        'nn_order': 'НН 1 или 2 -> 79037676877',
+        'ask_city': 'Город -> 79037676877',
+        'ask_full_address': 'Адр -> 79037676877',
+        'ask_email': 'Email -> 79037676877',
+        'ask_full_name': 'ФИО -> 79037676877',
+        'aks_company_details': 'Рекв -> 79037676877',
+        'thnks_1': 'Thnks!-1',
+        'thnks_2': 'Thnks!-2',
+        'shipping_to_N': 'N -> 79037676877',
+        'no_cdek_in_city': 'СДЭК нет'
+    }
+
+    return messages.get(key)
+
+
 def get_answer(id, sms_id,  number, mes):
     pass
 
 
-send_sms('79268401046')
+#put_data_to_db('79268401046', 'dk')
+num = get_number_from_db()
+#send_sms(num)
 
 
 
