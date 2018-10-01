@@ -90,7 +90,7 @@ def send_sms(num):
     :return:
     """
     sms = SMSC()
-    message = sms_message('welcome')
+    message = sms_message('ask_email')
     # number = get_number_from_db() uncomment this
     number = num  # comment this
     sms_id = 'id' + number
@@ -114,16 +114,16 @@ def sms_message(key):
     :return: str dict value
     """
     messages = {
-        'welcome': '1 или 2 -> 79037676877',
-        'order_1': 'Город -> 79037676877',
-        'order_2': 'Ф1 Ю2 -> 79037676877',
+        'welcome': '1',
+        'order_1': 'Город',
+        'order_2': 'Ф1 Ю2',
         'erunda_1': 'ерунда1',
         'erunda_2': 'ерунда2',
-        'msk_order': 'Мск 1 или 2 -> 79037676877',
-        'nn_order': 'НН 1 или 2 -> 79037676877',
+        'msk_order': 'Мск 1 или 2',
+        'nn_order': 'НН 1 или 2',
         'ask_city': 'Город -> 79037676877',
-        'ask_full_address': 'Адр -> 79037676877',
-        'ask_email': 'Email -> 79037676877',
+        'ask_full_address': 'Адр',
+        'ask_email': 'Email',
         'ask_full_name': 'ФИО -> 79037676877',
         'aks_company_details': 'Рекв -> 79037676877',
         'thnks_1': 'Thnks!-1',
@@ -140,8 +140,8 @@ def get_answer(id, sms_id,  number, mes):
 
 
 #put_data_to_db('79268401046', 'dk')
-num = get_number_from_db()
-#send_sms(num)
+#num = get_number_from_db()
+send_sms('79268401046')
 
 
 
