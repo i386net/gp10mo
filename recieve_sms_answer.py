@@ -15,7 +15,7 @@ def get_sms_answer():
     params = {'login': sa.login,
               'psw': sa.password,
               'fmt': '3',  # формат получения ответа в виде списка словарей"
-              'hour': '1'
+              'hour': '3'
               }
     r = requests.get(url, params)
 
@@ -33,12 +33,15 @@ def update_db_with_answer(answer):
         cursor = con.cursor()
 
         insert_query = 'INSERT INTO answers(sms_id, received, phone_number, message, to_phone, sent) VALUES(?,?,?,?,?,?)'
-        for element in answer:
-            #print(element, type(element))
-            element = tuple(element.values())
-            cursor.execute(insert_query, element)
-        con.commit()
-        con.close()
+        try:
+            for element in answer:
+                element = tuple(element.values())
+                cursor.execute(insert_query, element)
+                con.commit()
+                con.close()
+        except s3.IntegrityError as err:
+            print(err)
+
 
 
 
