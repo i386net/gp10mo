@@ -56,5 +56,35 @@ def update_db_with_answer(answer):
         con.close()
 
 
+def send_sms_regarging_to_answer(answer):
+    """
+    Обработчик ответов
+    :param answer: словарь
+    :return:
+    """
+    # TODO вставить ключевые фразы для  отправки смс
+    try:
+        phrase = answer.get('message')
+        if phrase.startswith(''):
+            pass
+        elif phrase.startswith(''):
+            pass
+        elif phrase.startswith(''):
+            pass
+        elif phrase.startswith(''):
+            pass
+        elif phrase.startswith(''):
+            pass
+        elif phrase.startswith(''):
+            pass
+        elif phrase.startswith(''):
+            pass
+        else:
+            pass
+    except KeyError:
+        print('Нет ключа')
+
+
+
 #ans = get_sms_answer()
 #update_db_with_answer(ans)
