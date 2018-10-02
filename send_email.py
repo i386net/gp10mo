@@ -4,6 +4,7 @@ send email with Python
 
 import smtplib
 from email.mime.text import MIMEText
+import netrc
 
 
 def sendmail(email):
