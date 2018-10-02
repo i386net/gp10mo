@@ -34,6 +34,11 @@ def get_sms_answer():
 
 
 def update_db_with_answer(answer):
+    """
+    Добавление ответов в базу
+    :param answer: list of dictionaries
+    :return:
+    """
     try:
         answer = answer
     except IndexError:
@@ -82,7 +87,7 @@ def send_sms_regarging_to_answer(answer):
         else:
             pass
     except KeyError:
-        print('Нет ключа')
+        print('Нет ключа')  # переделать в лог
 
 
 
