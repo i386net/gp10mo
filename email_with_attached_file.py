@@ -30,13 +30,13 @@ def send_attachment():
 
     file_name = 'project_files/db_model.pdf'  # file with ext
 
-    with open(file_name) as attachment:
+    with open(file_name, 'rb') as attachment:
         p = MIMEBase('application', 'octet-stream')
         p.set_payload(attachment.read())
         encoders.encode_base64(p)
         p.add_header('Content-Disposition', "attachment; filename= {}".format(file_name))
         message.attach(p)
-        print('here')
+
 
     server = smtplib.SMTP(smtpserver)
     print(server.set_debuglevel(1))
