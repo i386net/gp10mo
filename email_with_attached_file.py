@@ -28,7 +28,7 @@ def send_attachment():
 
     message.attach(MIMEText(body, 'plain'))
 
-    file_name = 'project_files/db_model.pdf'  # file with ext
+    file_name = ''  # file path with extension
 
     with open(file_name, 'rb') as attachment:
         p = MIMEBase('application', 'octet-stream')
@@ -36,7 +36,6 @@ def send_attachment():
         encoders.encode_base64(p)
         p.add_header('Content-Disposition', "attachment; filename= {}".format(file_name))
         message.attach(p)
-
 
     server = smtplib.SMTP(smtpserver)
     print(server.set_debuglevel(1))
