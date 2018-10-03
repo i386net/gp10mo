@@ -27,15 +27,17 @@ def send_attachment():
     body = 'Test'  # email text
 
     message.attach(MIMEText(body, 'plain'))
+    try:
+        file_name = ''  # file path with extension
 
-    file_name = ''  # file path with extension
-
-    with open(file_name, 'rb') as attachment:
-        p = MIMEBase('application', 'octet-stream')
-        p.set_payload(attachment.read())
-        encoders.encode_base64(p)
-        p.add_header('Content-Disposition', "attachment; filename= {}".format(file_name))
-        message.attach(p)
+        with open(file_name, 'rb') as attachment:
+            p = MIMEBase('application', 'octet-stream')
+            p.set_payload(attachment.read())
+            encoders.encode_base64(p)
+            p.add_header('Content-Disposition', "attachment; filename= {}".format(file_name))
+            message.attach(p)
+    except FileNotFoundError as err:
+        print(err)
 
     server = smtplib.SMTP(smtpserver)
     print(server.set_debuglevel(1))
